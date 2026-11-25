@@ -168,6 +168,9 @@ jobs:
           : "${ANYPOINT_PLATFORM_CLIENT_SECRET:?Set ANYPOINT_PLATFORM_CLIENT_SECRET}"
           : "${CLOUDHUB_ENCRYPT_KEY:?Set CLOUDHUB_ENCRYPT_KEY}"
 
+          echo "TEDDY"
+          echo $RELEASES_EE_USERNAME
+          echo $RELEASES_EE_PASSWORD
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
           mvn -V -B -ntp \
