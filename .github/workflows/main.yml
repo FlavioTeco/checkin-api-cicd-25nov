@@ -30,9 +30,6 @@ jobs:
     environment: exchange
     runs-on: ubuntu-26.04
     timeout-minutes: 20
-    env:
-      RELEASES_EE_USERNAME: muletraining.nexus
-      RELEASES_EE_PASSWORD: eApHMgTm
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -44,7 +41,8 @@ jobs:
           distribution: temurin
           java-version: '17'
           mvn-server-credentials: |
-            ${{ vars.EXCHANGE_SERVER_ID || 'anypoint-exchange-v3' }}:CA_MAVEN_USERNAME:CA_MAVEN_PASSWORD
+            ${{ vars.EXCHANGE_SERVER_ID || 'anypoint-exchange-v3-student-deployment' }}:CA_MAVEN_USERNAME:CA_MAVEN_PASSWORD
+            anypoint-exchange-v3:CA_MAVEN_USERNAME:CA_MAVEN_PASSWORD
             releases-ee:RELEASES_EE_USERNAME:RELEASES_EE_PASSWORD
 
       - &cache-maven
@@ -73,8 +71,6 @@ jobs:
             exit 1
           fi
 
-          echo "$RELEASES_EE_USERNAME"
-
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
           mvn -V -B -ntp -DskipTests clean package help:evaluate \
@@ -87,7 +83,6 @@ jobs:
           CA_CLIENT_ID: ${{ secrets.CA_CLIENT_ID }}
           CA_CLIENT_SECRET: ${{ secrets.CA_CLIENT_SECRET }}
         run: |
-          echo "$RELEASES_EE_USERNAME"
           token="$(curl --fail --silent --show-error --max-time 30 \
             --data-urlencode 'grant_type=client_credentials' \
             --data-urlencode "client_id=$CA_CLIENT_ID" \
@@ -131,11 +126,9 @@ jobs:
           CA_CLIENT_ID: ${{ secrets.CA_CLIENT_ID }}
           CA_CLIENT_SECRET: ${{ secrets.CA_CLIENT_SECRET }}
         run: |
-          echo "$RELEASES_EE_USERNAME"
-          echo "$RELEASES_EE_PASSWORD"
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
-          mvn -B -ntp -DskipTests deploy
+          mvn -B -ntp -DskipTests clean deploy -X
 
   deploy_cloudhub:
     name: Deploy the published Mule app to CloudHub Sandbox
@@ -176,12 +169,10 @@ jobs:
           : "${ANYPOINT_PLATFORM_CLIENT_SECRET:?Set ANYPOINT_PLATFORM_CLIENT_SECRET}"
           : "${CLOUDHUB_ENCRYPT_KEY:?Set CLOUDHUB_ENCRYPT_KEY}"
 
-          echo "$RELEASES_EE_USERNAME"
-          echo "$RELEASES_EE_PASSWORD"
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
           mvn -V -B -ntp \
-            -DapplicationName="check-in-app-acm-finalv1" \
+            -DapplicationName="check-in-papi-app-25nov-flv" \
             -Danypoint.platform.client_id="$ANYPOINT_PLATFORM_CLIENT_ID" \
             -Danypoint.platform.client_secret="$ANYPOINT_PLATFORM_CLIENT_SECRET" \
             -Dencrypt.key="$CLOUDHUB_ENCRYPT_KEY" \
