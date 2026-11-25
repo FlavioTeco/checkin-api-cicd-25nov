@@ -61,8 +61,8 @@ jobs:
         env:
           RELEASES_EE_USERNAME: muletraining.nexus
           RELEASES_EE_PASSWORD: eApHMgTm
-          CA_CLIENT_ID: ${{ secrets.CA_CLIENT_ID }}
-          CA_CLIENT_SECRET: ${{ secrets.CA_CLIENT_SECRET }}
+          CA_CLIENT_ID: 763c6ff76fd840678f1f2b5712142cda
+          CA_CLIENT_SECRET: 378318f12D214c449e6AA320B725D4df
         run: |
           : "${RELEASES_EE_USERNAME:?Set RELEASES_EE_USERNAME}"
           : "${RELEASES_EE_PASSWORD:?Set RELEASES_EE_PASSWORD}"
