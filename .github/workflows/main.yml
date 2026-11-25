@@ -70,6 +70,10 @@ jobs:
             exit 1
           fi
 
+          echo "TEDDY"
+          echo $RELEASES_EE_USERNAME
+          echo $RELEASES_EE_PASSWORD
+          
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
           mvn -V -B -ntp -DskipTests clean package help:evaluate \
