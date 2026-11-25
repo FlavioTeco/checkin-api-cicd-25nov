@@ -69,7 +69,9 @@ jobs:
             echo "::error::Set CA_CLIENT_ID and CA_CLIENT_SECRET for Exchange access."
             exit 1
           fi
-
+          export RELEASES_EE_USERNAME=muletraining.nexus
+          export RELEASES_EE_PASSWORD=eApHMgTm
+          
           echo "TEDDY"
           echo $RELEASES_EE_USERNAME
           echo $RELEASES_EE_PASSWORD
