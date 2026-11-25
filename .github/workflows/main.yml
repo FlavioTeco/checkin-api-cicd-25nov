@@ -44,7 +44,9 @@ jobs:
             ${{ vars.EXCHANGE_SERVER_ID || 'anypoint-exchange-v3-student-deployment' }}:CA_MAVEN_USERNAME:CA_MAVEN_PASSWORD
             anypoint-exchange-v3:CA_MAVEN_USERNAME:CA_MAVEN_PASSWORD
             releases-ee:RELEASES_EE_USERNAME:RELEASES_EE_PASSWORD
-
+            mulesoft-private:RELEASES_EE_USERNAME:RELEASES_EE_PASSWORD
+            mule-private:RELEASES_EE_USERNAME:RELEASES_EE_PASSWORD
+            
       - &cache-maven
         name: Cache public Maven dependencies
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
