@@ -30,6 +30,9 @@ jobs:
     environment: exchange
     runs-on: ubuntu-26.04
     timeout-minutes: 20
+    env:
+      RELEASES_EE_USERNAME: muletraining.nexus
+      RELEASES_EE_PASSWORD: eApHMgTm
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -58,24 +61,16 @@ jobs:
       - name: Compile and package Mule application
         id: package
         env:
-          RELEASES_EE_USERNAME: ${{ secrets.RELEASES_EE_USERNAME }}
-          RELEASES_EE_PASSWORD: ${{ secrets.RELEASES_EE_PASSWORD }}
           CA_CLIENT_ID: ${{ secrets.CA_CLIENT_ID }}
           CA_CLIENT_SECRET: ${{ secrets.CA_CLIENT_SECRET }}
         run: |
           : "${RELEASES_EE_USERNAME:?Set RELEASES_EE_USERNAME}"
           : "${RELEASES_EE_PASSWORD:?Set RELEASES_EE_PASSWORD}"
-          if [[ -z "$CA_CLIENT_ID" || -z "$CA_CLIENT_SECRET" ]]; then
+          if [[ -z "$CA_CLIENT_ID" \vert{}\vert{} -z "$CA_CLIENT_SECRET" ]]; then
             echo "::error::Set CA_CLIENT_ID and CA_CLIENT_SECRET for Exchange access."
             exit 1
           fi
-          export RELEASES_EE_USERNAME=muletraining.nexus
-          export RELEASES_EE_PASSWORD=eApHMgTm
-          
-          echo "TEDDY"
-          echo $RELEASES_EE_USERNAME
-          echo $RELEASES_EE_PASSWORD
-          
+
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
           mvn -V -B -ntp -DskipTests clean package help:evaluate \
@@ -97,9 +92,9 @@ jobs:
           printf '::add-mask::%s\n' "$token"
 
           # Maven project.id is groupId:artifactId:packaging:version.
-          asset_path="$(jq -Rer 'split(":") as [$groupId, $artifactId, $packaging, $version]
+          asset_path="$(jq -Rer 'split(":") as [$groupId,$artifactId, $packaging,$version]
             | select($packaging == "mule-application")
-            | [$groupId, $artifactId, $version] | map(@uri) | join("/")' "$RUNNER_TEMP/maven-project-id")"
+            | [$groupId,$artifactId, $version] \vert{} map(@uri) \vert{} join("/")' "$RUNNER_TEMP/maven-project-id")"
           asset_metadata="$RUNNER_TEMP/exchange-asset.json"
           status="$(curl --silent --show-error --max-time 30 --output "$asset_metadata" \
             --write-out '%{http_code}' --header "Authorization: Bearer $token" \
@@ -126,8 +121,6 @@ jobs:
       - name: Publish Mule application to Anypoint Exchange
         if: steps.exchange_version.outputs.exists == 'false'
         env:
-          RELEASES_EE_USERNAME: ${{ secrets.RELEASES_EE_USERNAME }}
-          RELEASES_EE_PASSWORD: ${{ secrets.RELEASES_EE_PASSWORD }}
           CA_CLIENT_ID: ${{ secrets.CA_CLIENT_ID }}
           CA_CLIENT_SECRET: ${{ secrets.CA_CLIENT_SECRET }}
         run: |
@@ -142,6 +135,9 @@ jobs:
     runs-on: ubuntu-26.04
     # Allow Maven's deployment verification to finish after runner setup.
     timeout-minutes: 25
+    env:
+      RELEASES_EE_USERNAME: muletraining.nexus
+      RELEASES_EE_PASSWORD: <TU_PASSWORD_DE_RELEASES_EE>
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -160,8 +156,6 @@ jobs:
 
       - name: Deploy the Exchange asset to CloudHub 2.0
         env:
-          RELEASES_EE_USERNAME: ${{ secrets.RELEASES_EE_USERNAME }}
-          RELEASES_EE_PASSWORD: ${{ secrets.RELEASES_EE_PASSWORD }}
           CA_CLIENT_ID: ${{ secrets.CA_CLIENT_ID }}
           CA_CLIENT_SECRET: ${{ secrets.CA_CLIENT_SECRET }}
           ANYPOINT_PLATFORM_CLIENT_ID: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_ID }}
@@ -174,9 +168,6 @@ jobs:
           : "${ANYPOINT_PLATFORM_CLIENT_SECRET:?Set ANYPOINT_PLATFORM_CLIENT_SECRET}"
           : "${CLOUDHUB_ENCRYPT_KEY:?Set CLOUDHUB_ENCRYPT_KEY}"
 
-          echo "TEDDY"
-          echo $RELEASES_EE_USERNAME
-          echo $RELEASES_EE_PASSWORD
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
           mvn -V -B -ntp \
