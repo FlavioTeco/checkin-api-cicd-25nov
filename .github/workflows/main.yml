@@ -75,7 +75,7 @@ jobs:
 
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
-          mvn -X -V -B -ntp -DskipTests clean package help:evaluate \
+          mvn -V -B -ntp -DskipTests clean package help:evaluate \
             -Dexpression=project.id -Doutput="$RUNNER_TEMP/maven-project-id"
           echo "artifact_id=$(cut -d: -f2 "$RUNNER_TEMP/maven-project-id")" >> "$GITHUB_OUTPUT"
 
