@@ -61,10 +61,10 @@ jobs:
       - name: Compile and package Mule application
         id: package
         env:
-          RELEASES_EE_USERNAME: muletraining.nexus
-          RELEASES_EE_PASSWORD: eApHMgTm
-          CA_CLIENT_ID: 763c6ff76fd840678f1f2b5712142cda
-          CA_CLIENT_SECRET: 378318f12D214c449e6AA320B725D4df
+          RELEASES_EE_USERNAME: ${{ secrets.RELEASES_EE_USERNAME }}
+          RELEASES_EE_PASSWORD: ${{ secrets.RELEASES_EE_PASSWORD }}
+          CA_CLIENT_ID: ${{ secrets.CA_CLIENT_ID }}
+          CA_CLIENT_SECRET: ${{ secrets.CA_CLIENT_SECRET }}
         run: |
           : "${RELEASES_EE_USERNAME:?Set RELEASES_EE_USERNAME}"
           : "${RELEASES_EE_PASSWORD:?Set RELEASES_EE_PASSWORD}"
@@ -173,7 +173,7 @@ jobs:
 
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
-          mvn -X -V -B -ntp \
+          mvn -V -B -ntp \
             -DapplicationName="check-in-papi-app-25nov-flv" \
             -Danypoint.platform.client_id="$ANYPOINT_PLATFORM_CLIENT_ID" \
             -Danypoint.platform.client_secret="$ANYPOINT_PLATFORM_CLIENT_SECRET" \
