@@ -164,12 +164,16 @@ jobs:
           ANYPOINT_PLATFORM_CLIENT_ID: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_ID }}
           ANYPOINT_PLATFORM_CLIENT_SECRET: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_SECRET }}
           CLOUDHUB_ENCRYPT_KEY: ${{ secrets.CLOUDHUB_ENCRYPT_KEY }}
+          AUTODISCOVERY_CLIENT_ID: ${{ secrets.AUTODISCOVERY_CLIENT_ID }}
+          AUTODISCOVERY_CLIENT_SECRET: ${{ secrets.AUTODISCOVERY_CLIENT_SECRET }}
         run: |
           : "${CA_CLIENT_ID:?Set CA_CLIENT_ID}"
           : "${CA_CLIENT_SECRET:?Set CA_CLIENT_SECRET}"
           : "${ANYPOINT_PLATFORM_CLIENT_ID:?Set ANYPOINT_PLATFORM_CLIENT_ID}"
           : "${ANYPOINT_PLATFORM_CLIENT_SECRET:?Set ANYPOINT_PLATFORM_CLIENT_SECRET}"
           : "${CLOUDHUB_ENCRYPT_KEY:?Set CLOUDHUB_ENCRYPT_KEY}"
+          : "${AUTODISCOVERY_CLIENT_ID:?Set AUTODISCOVERY_CLIENT_ID}"
+          : "${AUTODISCOVERY_CLIENT_SECRET:?Set AUTODISCOVERY_CLIENT_SECRET}"
 
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
@@ -177,5 +181,7 @@ jobs:
             -DapplicationName="check-in-papi-app-25nov-flv" \
             -Danypoint.platform.client_id="$ANYPOINT_PLATFORM_CLIENT_ID" \
             -Danypoint.platform.client_secret="$ANYPOINT_PLATFORM_CLIENT_SECRET" \
+            -Dautodiscovery.client_id="$AUTODISCOVERY_CLIENT_ID" \
+            -Dautodiscovery.client_secret="$AUTODISCOVERY_CLIENT_SECRET" \
             -Dencrypt.key="$CLOUDHUB_ENCRYPT_KEY" \
             mule:deploy
