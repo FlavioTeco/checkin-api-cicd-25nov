@@ -73,6 +73,8 @@ jobs:
             exit 1
           fi
 
+          echo "$RELEASES_EE_USERNAME"
+
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
           mvn -V -B -ntp -DskipTests clean package help:evaluate \
@@ -85,6 +87,7 @@ jobs:
           CA_CLIENT_ID: ${{ secrets.CA_CLIENT_ID }}
           CA_CLIENT_SECRET: ${{ secrets.CA_CLIENT_SECRET }}
         run: |
+          echo "$RELEASES_EE_USERNAME"
           token="$(curl --fail --silent --show-error --max-time 30 \
             --data-urlencode 'grant_type=client_credentials' \
             --data-urlencode "client_id=$CA_CLIENT_ID" \
@@ -128,6 +131,8 @@ jobs:
           CA_CLIENT_ID: ${{ secrets.CA_CLIENT_ID }}
           CA_CLIENT_SECRET: ${{ secrets.CA_CLIENT_SECRET }}
         run: |
+          echo "$RELEASES_EE_USERNAME"
+          echo "$RELEASES_EE_PASSWORD"
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
           mvn -B -ntp -DskipTests deploy
@@ -171,6 +176,8 @@ jobs:
           : "${ANYPOINT_PLATFORM_CLIENT_SECRET:?Set ANYPOINT_PLATFORM_CLIENT_SECRET}"
           : "${CLOUDHUB_ENCRYPT_KEY:?Set CLOUDHUB_ENCRYPT_KEY}"
 
+          echo "$RELEASES_EE_USERNAME"
+          echo "$RELEASES_EE_PASSWORD"
           export CA_MAVEN_USERNAME='~~~Client~~~'
           export CA_MAVEN_PASSWORD="$CA_CLIENT_ID~?~$CA_CLIENT_SECRET"
           mvn -V -B -ntp \
